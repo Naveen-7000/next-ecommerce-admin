@@ -13,7 +13,15 @@ const productSchema = new Schema({
     price:{
         type:Number,
         required:true
-    }
+    },
+    images:[{
+        type:String,
+    }],
+    category:{
+        type:mongoose.Types.ObjectId,
+        ref:'Category'
+    },
+    properties: {type:Object},
 });
 
 export default mongoose.models.Product || mongoose.model('Product',productSchema);

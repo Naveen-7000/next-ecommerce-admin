@@ -6,7 +6,7 @@ const {method} = req;
 await mongoosConnect();
 
 if(method === "POST"){
- const {title,description,price} = req.body;
+ const {title,description,price,images,category,properties} = req.body;
  if(!title){
     return res.status(422).json({error:"Product title is required"});
  }
@@ -16,10 +16,16 @@ if(!description){
 if(!price){
     return res.status(422).json({error:"Product price is required"});
 }
+if(!category){
+    return res.status(422).json({error:"Product category is required"});
+}
 const product = new Product({
     title,
     description,
-    price
+    price,
+    images,
+    category,
+    properties
 });
 
 try{
@@ -49,10 +55,9 @@ if(method === 'GET'){
 }
 
 if(method === "PUT"){
-    const {title,description,price,_id} = req.body;
-    console.log(req.body);
+    const {title,description,price,_id,images,category,properties} = req.body;
    try{
-       await Product.updateOne({_id},{title,description,price});
+       await Product.updateOne({_id},{title,description,price,images,category,properties});
        res.status(201).json({message:"Product updated successfully"});
    }catch(error){
        res.status(500).json({error:"Error in updating product"});

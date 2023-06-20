@@ -16,12 +16,12 @@
   }
 }
 
-input, textarea {
+input, textarea, select {
   @apply border border-2 border-gray-300 rounded-md px-2 w-full ;
   @apply mb-2;
 }
 
-input, textarea {
+input, textarea, select {
   @apply focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent;
 }
 
@@ -41,7 +41,7 @@ table.basic{
   @apply w-full mt-4;
 }
 
-table.basic thead tr th{
+table.basic thead tr td{
   @apply bg-blue-100 text-left;
 }
 table.basic tr td{

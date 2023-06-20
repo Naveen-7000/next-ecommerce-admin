@@ -1,8 +1,12 @@
 import multiparty from 'multiparty';
 import {S3Client,PutObjectCommand} from '@aws-sdk/client-s3';
+import fs from 'fs';
+import mime from 'mime-types';
 const bucketName = 'shanksnext-ecommerce';
+
 export default async function handler(req, res) {
     const form = new multiparty.Form();
+    // parse the request
     form.parse(req, async (err, fields, files) => {
     if (err) {
       console.log(err);
@@ -17,15 +21,23 @@ export default async function handler(req, res) {
         secretAccessKey: process.env.S3_SECRET_ACCESS_KEY,
       },
     })
-
+   const links = []; // here i want to collect all the links of files uploaded
     // now i want to make each file name unique  also here i am sending the file to s3 bucket
     for(const file of files.file){
+      const extension = file.originalFilename.split('.').pop();
+      const fileName = Date.now() + '.' + extension;
     await client.send(new PutObjectCommand({
       Bucket: bucketName,
-      Key:''
+      Key:fileName,
+      Body: fs.readFileSync(file?.path), //here i need to send the file buffer using fs
+      ACL: 'public-read',
+      ContentType: mime.lookup(file?.path) // here i am using mime-types because i am not sure about ext of file comming from client
     }))
+    // now collect link of all files and send it to client
+    const link = `https://${bucketName}.s3.amazonaws.com/${fileName}`;
+    links.push(link);
     }
-    res.status(200).json({message:"File uploaded successfully"});
+    res.status(200).json({message:"File uploaded successfully",links:links});
   }
     );
 }

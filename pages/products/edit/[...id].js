@@ -13,16 +13,14 @@ export default function EditProductPage(){
               const res = await axios.get(`/api/products?id=${id}`);
               const product = res.data;
               setProduct(product);
-              
          })();
     }, [id])
-    
     return(
         <Layout>
             <h1>Edit Product</h1>
             {product && (
                 <ProductForm {...product}/>
             )}
-        </Layout>  
+        </Layout>
     );
 }
