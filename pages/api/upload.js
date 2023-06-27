@@ -2,9 +2,13 @@ import multiparty from 'multiparty';
 import {S3Client,PutObjectCommand} from '@aws-sdk/client-s3';
 import fs from 'fs';
 import mime from 'mime-types';
+import { mongoosConnect } from '@/lib/mongoose';
+import { isAdmin } from './auth/[...nextauth]';
 const bucketName = 'shanksnext-ecommerce';
 
 export default async function handler(req, res) {
+  await mongoosConnect();
+await isAdmin(req,res);
     const form = new multiparty.Form();
     // parse the request
     form.parse(req, async (err, fields, files) => {

@@ -1,9 +1,12 @@
 import { mongoosConnect } from "@/lib/mongoose";
 import Product from "@/models/product";
+import { isAdmin } from "./auth/[...nextauth]";
 
 export default async function handler(req, res){
 const {method} = req;
 await mongoosConnect();
+await isAdmin(req,res);
+
 
 if(method === "POST"){
  const {title,description,price,images,category,properties} = req.body;
